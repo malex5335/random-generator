@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CustomRandomTest {
 
-	static CustomRandom random = CustomRandom.create();
+	CustomRandom random = CustomRandom.create();
 
 	@RepeatedTest(value = 150)
 	void nextString() {

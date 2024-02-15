@@ -2,7 +2,10 @@ package de.riagade;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.stream.*;
+
+import static java.lang.Math.*;
 
 public class CustomRandom {
 
@@ -22,11 +25,11 @@ public class CustomRandom {
 
 	private CustomRandom(long seed) {
 		this.seed = seed;
-		this.next = seed / (seed * 5.2f);
+		this.next = (float) (log(abs(seed) + 1) * 100) % 1;
 	}
 
 	public static CustomRandom create() {
-		return create(1);
+		return create(LocalDateTime.now().getNano());
 	}
 
 	public static CustomRandom create(long seed) {
