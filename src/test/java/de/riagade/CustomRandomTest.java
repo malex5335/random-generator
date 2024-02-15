@@ -9,7 +9,7 @@ class CustomRandomTest {
 	static CustomRandom random = CustomRandom.create();
 
 	@RepeatedTest(value = 150)
-	void rands() {
+	void nextString() {
 		// Given
 		var length = 15;
 
@@ -22,7 +22,7 @@ class CustomRandomTest {
 	}
 
 	@RepeatedTest(value = 150)
-	void rands_custom_chars() {
+	void nextString_custom_chars() {
 		// Given
 		var length = 16;
 		var chars = CustomRandom.hex_characters;
@@ -38,7 +38,7 @@ class CustomRandomTest {
 	}
 
 	@RepeatedTest(value = 150)
-	void randi() {
+	void nextInt() {
 		// Given
 		var min = 1;
 		var max = 100;
@@ -53,7 +53,7 @@ class CustomRandomTest {
 	}
 
 	@RepeatedTest(value = 150)
-	void randf() {
+	void nextFloat() {
 		// Given
 		var min = 0;
 		var max = 1;
@@ -65,5 +65,15 @@ class CustomRandomTest {
 		System.out.println(result);
 		assertTrue(result >= min);
 		assertTrue(result <= max);
+	}
+
+	@RepeatedTest(value = 150)
+	void nextUUID() {
+		// When
+		var result = random.nextUUID();
+
+		// Then
+		System.out.println(result);
+		assertTrue(result.matches("\\{\\p{XDigit}{8}-\\p{XDigit}{4}-\\p{XDigit}{4}-\\p{XDigit}{4}-\\p{XDigit}{12}}"));
 	}
 }

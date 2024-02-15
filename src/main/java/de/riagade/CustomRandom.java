@@ -13,17 +13,16 @@ public class CustomRandom {
 	public static final String all_characters = uppercase_letters + lowercase_letters + numbers + special_letters;
 	public static final String hex_characters = "ABCDEF" + numbers;
 	private static final float RAND_MAX = 1f;
-	private static final float RAND_CONST = 0.167298f;
+	private static final float RAND_SALT = 12f;
+	private static final float RAND_CONST = 0.467798f;
 
 	@Getter
 	private final long seed;
-	private final float randSalt;
 	private float next;
 
 	private CustomRandom(long seed) {
 		this.seed = seed;
-		this.randSalt = seed / (seed * 5f) * RAND_CONST;
-		this.next = randSalt;
+		this.next = seed / (seed * 5.2f);
 	}
 
 	public static CustomRandom create() {
@@ -62,11 +61,16 @@ public class CustomRandom {
 	}
 
 	public float nextFloat() {
-		next = (next * (RAND_CONST + randSalt));
-		while (next < RAND_MAX){
-			// TODO: find a math solution for this
-			next *= 10 + RAND_MAX;
-		}
-		return next % RAND_MAX;
+		return next = (next * (RAND_CONST + RAND_SALT)) % RAND_MAX;
+	}
+
+	public String nextUUID() {
+		return "{%s-%s-%s-%s-%s}".formatted(
+				nextString(8, hex_characters),
+				nextString(4, hex_characters),
+				nextString(4, hex_characters),
+				nextString(4, hex_characters),
+				nextString(12, hex_characters)
+		);
 	}
 }
