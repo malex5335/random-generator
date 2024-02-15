@@ -57,7 +57,7 @@ public class CustomRandom {
 	}
 
 	private int roundUp(float number) {
-		return (int) (number % 1 >= 0.5 ? 1 + number : number);
+		return ((int) number + (int) (number % 1) * 2);
 	}
 
 	public float nextFloat() {
