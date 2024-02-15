@@ -4,9 +4,9 @@ import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class RandomTest {
+class CustomRandomTest {
 
-	static Random random = Random.create();
+	static CustomRandom random = CustomRandom.create();
 
 	@RepeatedTest(value = 150)
 	void rands() {
@@ -14,11 +14,27 @@ class RandomTest {
 		var length = 15;
 
 		// When
-		var result = random.rands(length);
+		var result = random.nextString(length);
 
 		// Then
 		System.out.println(result);
 		assertEquals(length, result.length());
+	}
+
+	@RepeatedTest(value = 150)
+	void rands_custom_chars() {
+		// Given
+		var length = 16;
+		var chars = CustomRandom.hex_characters;
+		var hexRegex = "[0-9A-F]+";
+
+		// When
+		var result = random.nextString(length, chars);
+
+		// Then
+		System.out.println(result);
+		assertEquals(length, result.length());
+		assertTrue(result.matches(hexRegex));
 	}
 
 	@RepeatedTest(value = 150)
@@ -28,7 +44,7 @@ class RandomTest {
 		var max = 100;
 
 		// When
-		var result = random.randi(min, max);
+		var result = random.nextInt(min, max);
 
 		// Then
 		System.out.println(result);
@@ -43,7 +59,7 @@ class RandomTest {
 		var max = 1;
 
 		// When
-		var result = random.randf();
+		var result = random.nextFloat();
 
 		// Then
 		System.out.println(result);

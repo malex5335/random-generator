@@ -4,63 +4,67 @@ import lombok.*;
 
 import java.util.stream.*;
 
-@Getter
-public class Random {
+public class CustomRandom {
 
-	private static final String uppercase_letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	private static final String lowercase_letters = "abcdefghijklmnopqrstuvwxyz";
-	private static final String numbers = "0123456789";
-	private static final String special_letters = "ß?+*~#'-_.:,;<|>!\"§$%&/()=}][{\\";
-	private static final String all_characters = uppercase_letters + lowercase_letters + numbers + special_letters;
+	public static final String uppercase_letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	public static final String lowercase_letters = "abcdefghijklmnopqrstuvwxyz";
+	public static final String numbers = "0123456789";
+	public static final String special_letters = "ß?+*~#'-_.:,;<|>!\"§$%&/()=}][{\\";
+	public static final String all_characters = uppercase_letters + lowercase_letters + numbers + special_letters;
+	public static final String hex_characters = "ABCDEF" + numbers;
 	private static final float RAND_MAX = 1f;
 	private static final float RAND_CONST = 0.167298f;
 
+	@Getter
 	private final long seed;
 	private final float randSalt;
 	private float next;
 
-	private Random(long seed) {
+	private CustomRandom(long seed) {
 		this.seed = seed;
 		this.randSalt = seed / (seed * 5f) * RAND_CONST;
 		this.next = randSalt;
 	}
 
-	public static Random create() {
-		return create(System.currentTimeMillis());
-	}
-	public static Random create(long seed) {
-		return new Random(seed);
+	public static CustomRandom create() {
+		return create(1);
 	}
 
-	public String rands(int length) {
-		return rands(length, all_characters);
+	public static CustomRandom create(long seed) {
+		return new CustomRandom(seed);
 	}
-	public String rands(int length, String characters) {
+
+	public String nextString(int length) {
+		return nextString(length, all_characters);
+	}
+
+	public String nextString(int length, String characters) {
 		return IntStream.range(0,length)
-				.mapToObj(i -> randc(characters.toCharArray()))
+				.mapToObj(i -> nextChar(characters.toCharArray()))
 				.map(String::valueOf)
 				.collect(Collectors.joining());
 	}
 
-	public char randc(char[] options) {
-		return options[randi(options.length - 1)];
+	public char nextChar(char[] options) {
+		return options[nextInt(options.length - 1)];
 	}
 
-	public int randi(int max) {
-		return randi(0, max);
+	public int nextInt(int max) {
+		return nextInt(0, max);
 	}
 
-	public int randi(int min, int max) {
-		return roundUp( (max - min) * randf()) + min;
+	public int nextInt(int min, int max) {
+		return roundUp( (max - min) * nextFloat()) + min;
 	}
 
 	private int roundUp(float number) {
 		return (int) (number % 1 >= 0.5 ? 1 + number : number);
 	}
 
-	public float randf() {
+	public float nextFloat() {
 		next = (next * (RAND_CONST + randSalt));
 		while (next < RAND_MAX){
+			// TODO: find a math solution for this
 			next *= 10 + RAND_MAX;
 		}
 		return next % RAND_MAX;
